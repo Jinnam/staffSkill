@@ -34,7 +34,7 @@
 				<td>±â¼ú</td>
 				<td colspan="3"><div>
 					<c:forEach var="sk" items="${SkillList }">
-						<input type="checkbox" name="skill" value="${sk.no }"/>${sk.name }
+						<input type="checkbox" name="skillNo" value="${sk.no }"/>${sk.name }
 					</c:forEach>
 				</div></td>
 			</tr>

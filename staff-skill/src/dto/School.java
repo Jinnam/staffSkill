@@ -11,6 +11,10 @@ public class School {
 		this.no = no;
 		this.graduate = graduate;
 	}
+	public School(int no) {
+		super();
+		this.no = no;
+	}
 	public int getNo() {
 		return no;
 	}

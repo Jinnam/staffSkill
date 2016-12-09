@@ -122,43 +122,40 @@ public class MiniDao {
 
 	}
 	
-	public Skill mSelectSkill(){
-	String skillSql="SELECT SKILLNO FROM STAFFSKILL WHERE sn=?";
-	stmt2=conn.prepareStatement(skillSql);
-	stmt2.setString(1, rs.getString("sn"));
-	rs2=stmt2.executeQuery();
-	while(rs2.next()){
-		skill.s
-		staffAll.setSkill("skill");
-	}
-	
 	//Staff와 skill에 입력
-	public int mInsertStaff(Staff staff, String[] skill){
+	public int mInsertStaff(Staff staff, int[] skill){
 		int rowCount = 0;
 		Connection conn = null;
 		PreparedStatement stmt=null;
+		ResultSet rs = null;
+		int staffNo = 0;
 		
-		String staffSql="INSERT INTO staff(NO,NAME,SN,GRADUATEDAY,SCHOOLNO,RELIGIONNO) VALUES (STAFF_SEQ.nextval,?,?,?,?,?)";
+		String staffSql="INSERT INTO staff(NO,NAME,SN,GRADUATEDAY,SCHOOLNO,RELIGIONNO) "
+				+ "VALUES (STAFF_SEQ.nextval,?,?,?,?,?)";
 		System.out.println(staffSql+" : staffSql");
 		try {
 			conn=this.connection();
-			stmt = conn.prepareStatement(staffSql);
+			stmt = conn.prepareStatement(staffSql, String[] {"no"});
 			stmt.setString(1, staff.getName());
 			stmt.setString(2, staff.getSn());
 			stmt.setString(3, staff.getGraduateday());
-			stmt.setInt(4, staff.getSchoolNo());
-			stmt.setInt(5, staff.getReligionNo());
+			stmt.setInt(4, staff.getSchool().getNo());
+			stmt.setInt(5, staff.getReligion().getNo());
 			stmt.executeUpdate();
-			stmt.getg
 			System.out.println("STAFF 입력성공");
+			rs = stmt.getGeneratedKeys();
+			if(rs.next()){
+				staffNo = rs.getInt(1);
+				System.out.println(staffNo+" : <<<getGeneratedKeys");
+			}
 			
 			for(int i=0;i<skill.length;i++){
-				String skillSql="INSERT INTO STAFFSKILL(NO,STAFFNO,SKILLNO) VALUES (STAFFSKILL_SEQ.nextval,(SELECT no FROM STAFF WHERE sn=?) ,?)";
+				String skillSql="INSERT INTO STAFFSKILL(NO,STAFFNO,SKILLNO) VALUES (STAFFSKILL_SEQ.nextval,?,?)";
 				System.out.println(skillSql+" : skillSql");
 				try{
 					stmt=conn.prepareStatement(skillSql);
-					stmt.setString(1, staff.getSn());
-					stmt.setString(2, skill[i]);
+					stmt.setInt(1, staffNo);
+					stmt.setInt(2, skill[i]);
 					System.out.println(i+" : for반복 횟수");
 					stmt.executeUpdate();
 				}catch(Exception e){
