@@ -128,6 +128,7 @@ public class MiniDao {
 		Connection conn = null;
 		PreparedStatement stmt=null;
 		ResultSet rs = null;
+		String[] getStaffNo = {NO};
 		int staffNo = 0;
 		
 		String staffSql="INSERT INTO staff(NO,NAME,SN,GRADUATEDAY,SCHOOLNO,RELIGIONNO) "
@@ -135,7 +136,7 @@ public class MiniDao {
 		System.out.println(staffSql+" : staffSql");
 		try {
 			conn=this.connection();
-			stmt = conn.prepareStatement(staffSql, String[] {"no"});
+			stmt = conn.prepareStatement(staffSql, getStaffNo);
 			stmt.setString(1, staff.getName());
 			stmt.setString(2, staff.getSn());
 			stmt.setString(3, staff.getGraduateday());
