@@ -14,6 +14,7 @@ import dto.School;
 import dto.Skill;
 import dto.Staff;
 import dto.StaffAll;
+import dto.SearchStaff;
 
 public class MiniDao {
 	private final String driver = "oracle.jdbc.OracleDriver";
@@ -31,17 +32,17 @@ public class MiniDao {
 	//모든 회원 정보 가져오기
 	public List<StaffAll> mSelectAll(){
 		List<StaffAll> list = new ArrayList<StaffAll>();
-		StaffAll staffAll = null;
+		SearchStaff staffAll = null;
 		Connection conn = null;
 		PreparedStatement stmt=null;
 		ResultSet rs = null;
-		String sql="SELECT STAFF.* , STAFFSKILL.* FROM STAFF FULL OUTER JOIN STAFFSKILL ON STAFF.NO = STAFFSKILL.STAFFNO";
+		String sql="SELECT * FROM STAFF";
 		try {
 			conn=this.connection();
 			stmt = conn.prepareStatement(sql);
 			rs= stmt.executeQuery();
 			while(rs.next()){
-				staffAll=new StaffAll();
+				staffAll=new SearchStaff();
 				staffAll.setNo(rs.getInt("no"));
 				staffAll.setName(rs.getString("name"));
 				staffAll.setGraduateday(rs.getString("graduateday"));
@@ -62,7 +63,7 @@ public class MiniDao {
 		return list;
 
 	}
-	//테이블에서 주민번호 가져와서 성별 검색?
+/*	//테이블에서 주민번호 가져와서 성별 검색?
 	public Staff mSelectForSn(){
 		Staff staff = null;
 		Connection conn = null;
@@ -89,7 +90,7 @@ public class MiniDao {
 		}
 		return staff;
 
-	}
+	}*/
 	
 	//한명의 정보 STAFF 테이블에서 가져오기(컬럼별)
 	public StaffAll mSelectForOne(String colum, String value){
@@ -128,28 +129,30 @@ public class MiniDao {
 		Connection conn = null;
 		PreparedStatement stmt=null;
 		ResultSet rs = null;
-		String[] getStaffNo = {NO};
 		int staffNo = 0;
+		String[] keyCol = {"NO"};
+
+
 		
 		String staffSql="INSERT INTO staff(NO,NAME,SN,GRADUATEDAY,SCHOOLNO,RELIGIONNO) "
 				+ "VALUES (STAFF_SEQ.nextval,?,?,?,?,?)";
 		System.out.println(staffSql+" : staffSql");
 		try {
 			conn=this.connection();
-			stmt = conn.prepareStatement(staffSql, getStaffNo);
+			stmt = conn.prepareStatement(staffSql, keyCol);
 			stmt.setString(1, staff.getName());
 			stmt.setString(2, staff.getSn());
 			stmt.setString(3, staff.getGraduateday());
 			stmt.setInt(4, staff.getSchool().getNo());
 			stmt.setInt(5, staff.getReligion().getNo());
-			stmt.executeUpdate();
+			rowCount = stmt.executeUpdate();
 			System.out.println("STAFF 입력성공");
 			rs = stmt.getGeneratedKeys();
 			if(rs.next()){
 				staffNo = rs.getInt(1);
 				System.out.println(staffNo+" : <<<getGeneratedKeys");
 			}
-			
+			System.out.println(skill.length+" : skill.length");
 			for(int i=0;i<skill.length;i++){
 				String skillSql="INSERT INTO STAFFSKILL(NO,STAFFNO,SKILLNO) VALUES (STAFFSKILL_SEQ.nextval,?,?)";
 				System.out.println(skillSql+" : skillSql");

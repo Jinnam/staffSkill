@@ -14,8 +14,8 @@
 				<td>이름</td>
 				<td><input type="text" name="name"/></td>
 				<td>성별</td>
-				<td><input type="checkbox" name="gender" value="man">남
-					<input type="checkbox" name="gender" value="woman">여</td>
+				<td><input type="checkbox" name="gender" value="1">남
+					<input type="checkbox" name="gender" value="2">여</td>
 				<td>종교</td>
 				<td><select name="religion">
 					<option value="0">종교선택</option>

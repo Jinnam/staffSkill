@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import dao.MiniDao;
 import dto.Religion;
 import dto.School;
+import dto.SearchStaff;
 import dto.Skill;
 import dto.Staff;
 import dto.StaffAll;
@@ -19,7 +20,7 @@ import dto.StaffAll;
 @WebServlet("/StaffSearchController")
 public class StaffSearchController extends HttpServlet {
 	MiniDao dao;
-	Staff staff;
+	SearchStaff searchStaff;
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		dao = new MiniDao();
 		List<Religion> ReligionList = dao.mSelectForReligion();
@@ -35,38 +36,44 @@ public class StaffSearchController extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("StaffSearchController doPost진입성공");
+		
+		//이름
 		String name =request.getParameter("name");
+		searchStaff.setName(name);
+		//졸업일
 		String graduateDayOne = request.getParameter("graduateDayOne");
 		String graduateDayTwo = request.getParameter("graduateDayTwo");
+		searchStaff.setGraduateDayOne(graduateDayOne);
+		searchStaff.setGraduateDayTwo(graduateDayTwo);
+		//종교
 		int religion = Integer.parseInt(request.getParameter("religion"));
-		String[] skill =request.getParameterValues("skill");
-		String[] gender =request.getParameterValues("gender");
-		String[] school =request.getParameterValues("school");
-		
-		
-
-		
-	//	이름 Staff에 셋팅
-		staff = new Staff();
-		if(name==null){
-			staff.setName("*");
-		}else{
-			staff.setName(name);
+		Religion rel = new Religion();
+		rel.setNo(religion);
+		searchStaff.setReligion(rel);
+		//기술
+		String[] getskill =request.getParameterValues("skill");
+		int[] skill={getskill.length};
+		for(int i=0;i< getskill.length;i++){
+			skill[i] =Integer.parseInt(getskill[i]);
+			searchStaff.setSkill(skill);
 		}
-		for(int i=0;i<skill.length;i++){
-			
+		//성별
+		String[] getgender =request.getParameterValues("gender");	
+		int[] gender={getgender.length};
+		for(int i=0;i< getgender.length;i++){
+			gender[i] =Integer.parseInt(getgender[i]);
+			searchStaff.setGender(gender);
+		}
+		//최종학력
+		String[] getschool =request.getParameterValues("school");
+		int[] school={getschool.length};
+		for(int i=0;i< getschool.length;i++){
+			school[i] =Integer.parseInt(getschool[i]);
+			searchStaff.setSchool(school);
+		}
+		
+		=dao.mSelectAll();
+		
 		
 	}
-		for(int i=0;i<gender.length;i++){
-			if(gender.length<1){
-				
-			}else if(gender.length>1){
-		}
-	
-	
-	
-	
-	
-		}
-}
 }
